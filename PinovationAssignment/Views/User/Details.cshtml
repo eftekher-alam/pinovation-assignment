@@ -1,0 +1,43 @@
+﻿@model PinovationAssignment.Models.TblUsers
+@{
+    ViewData["Title"] = "Details";
+
+    var age = DateTime.Today.Year - Model.dob.Year;
+    string city = "";
+    int countryId = 0;
+    string countryName = "";
+    foreach (var item in ViewBag.city)
+    {
+        if (Model.cityId == item.cityId)
+        {
+            city = item.cityName;
+            countryId = item.countryId;
+            break;
+        }
+    }
+    foreach (var item in ViewBag.countries)
+    {
+        if (countryId == item.countryId)
+        {
+            countryName = item.countryName;
+            break;
+        }
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div><img src="~/@Model.userImg" height="100px" width="100px"></div>
+        <div>Name:  @Model.fullName</div>
+        <div>Age:  @age</div>
+        <div>Gender : @ViewBag.Gender</div>
+        <div>Address : @city, @countryName</div>
+        <div>Phone : @Model.phoneNo</div>
+        <div>Email : @Model.emailNo</div>
+        <div class="mt-2">
+            <a asp-controller="User" asp-action="DownloadFile" asp-route-userCV="@Model.userCV" class="btn btn-sm btn-primary">View CV</a>
+            <a asp-controller="User" asp-action="Edit" asp-route-userId="@Model.userId" class="btn btn-sm btn-outline-primary">Edit Information</a>
+        </div>
+    </div>
+</div>
+

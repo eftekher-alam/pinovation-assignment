@@ -1,0 +1,70 @@
+﻿@model IEnumerable<PinovationAssignment.Models.TblUsers>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center">
+                <h3>List Of User</h3>
+                
+            </div>
+            <table class="table table-striped" id="userTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Image</th>
+                        <th>CV</th>
+                        <th>password</th>
+                        <th>Date Of Birth</th>
+                        <th>City</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.fullName</td>
+                            <td>@item.phoneNo</td>
+                            <td>@item.emailNo</td>
+                            <td>
+                                <img src="~/@item.userImg" class="rounded-circle" height="50px" width="50px">
+                            </td>
+                            <td>
+                                <a asp-controller="User" asp-action="DownloadFile" asp-route-userCV="@item.userCV" class="btn btn-sm btn-primary">View CV</a>
+                            </td>
+                            <td>@item.password</td>
+                            <td>@item.dob.ToString("dd-MM-yyyy")</td>
+                            <td>
+                                @foreach (var x in ViewBag.city)
+                                {
+                                    if (@item.cityId == x.cityId)
+                                    {
+                                        <p>@x.cityName</p>
+                                        break;
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.1/af-2.5.1/datatables.min.css" />
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.1/af-2.5.1/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#userTable').DataTable();
+        });
+    </script>
+}

@@ -1,0 +1,136 @@
+﻿@model PinovationAssignment.ViewModel.TblUserVM
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3 border">
+            <h3 class="text-center mt-3">Edit Profile</h3>
+            <hr />
+            <form method="post" asp-asp-controller="User" asp-action="Edit" asp-route-userId="@Model.userId" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="fName" class="form-label"></label>
+                    <input asp-for="fName" type="text" class="form-control" />
+                    <span asp-validation-for="fName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="lName" class="form-label"></label>
+                    <input asp-for="lName" type="text" class="form-control" />
+                    <span asp-validation-for="lName" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-2">
+                        <label asp-for="Gender"></label>
+                    </div>
+                    <div class="col-10">
+                        <div class="form-check form-check-inline">
+                            <input asp-for="Gender" class="form-check-input" type="radio" id="inlineRadio1" value="Male" disabled>
+                            <label asp-for="Gender" class="form-check-label" for="inlineRadio1">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input asp-for="Gender" class="form-check-input" type="radio" id="inlineRadio2" value="Female" disabled>
+                            <label asp-for="Gender" class="form-check-label" for="inlineRadio2">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input asp-for="Gender" class="form-check-input" type="radio" id="inlineRadio3" value="Other" disabled>
+                            <label asp-for="Gender" class="form-check-label" for="inlineRadio3">Other</label>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Gender"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="phoneNo" class="form-label"></label>
+                    <input asp-for="phoneNo" type="tel" class="form-control" />
+                    <span asp-validation-for="phoneNo" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="emailNo" class="form-label"></label>
+                    <input asp-for="emailNo" type="email" class="form-control" />
+                    <span asp-validation-for="emailNo" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="userImg" class="form-label"></label>
+                    <input asp-for="userImg" type="file" class="form-control"/>
+                    <span asp-validation-for="userImg" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="userCV" class="form-label"></label>
+                    <input asp-for="userCV" type="file" class="form-control" />
+                    <span asp-validation-for="userCV" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="password" class="form-label"></label>
+                    <input asp-for="password" type="password" class="form-control" />
+                    <span asp-validation-for="password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="dob" class="form-label"></label>
+                    <input asp-for="dob" type="date" class="form-control" />
+                    <span asp-validation-for="dob" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="cityId" class="form-label"></label>
+                    <div class="row">
+                        <div class="col-6">
+                            <select asp-for="countryId" id="countryList" class="form-control">
+                                <option>---------- Select Country --------</option>
+                                @foreach (var item in ViewBag.countries)
+                                {
+                                    <option value="@item.countryId">@item.countryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select asp-for="cityId" id="cityList" class="form-control">
+                                <option>------------- Select City -----------</option>
+                                @if (@ViewBag.city != null)
+                                {
+                                    @foreach (var item in @ViewBag.city)
+                                    {
+                                        <option value="@item.cityId">@item.cityName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <span asp-validation-for="cityId" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-sm btn-outline-success">Save</button>
+                    <a asp-controller="User" asp-action="Index" class="btn btn-sm btn-outline-info">Back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        $(document).ready(function () {
+            $("#countryList").on("change", function () {
+                $.ajax({
+                    type: "Post",
+                    url: "/User/GetCity",
+                    data: { "countryId": $("#countryList").val() },
+                    success: function (response) {
+                        var items = '';
+                        items = "<option>------------- Select City -----------</option>";
+                        $(response).each(function () {
+                            items += "<option value=" + this.value + ">" + this.text + "</option>";
+                        })
+                        $("#cityList").html(items);
+                    }
+                });
+            });
+        });
+    </script>
+}
